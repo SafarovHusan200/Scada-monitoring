@@ -3,8 +3,10 @@ import axios from 'axios';
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 export const stationService = {
-  getAll: async () => {
-    const res = await axios.get(`${API}/stations`);
+  getAll: async (params) => {
+    console.log(params);
+
+    const res = await axios.get(`${API}/stations?${params}`);
     return res.data.data;
   },
 

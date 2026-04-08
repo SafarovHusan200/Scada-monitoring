@@ -19,54 +19,69 @@ const Filters = ({ setFiltered, filtered }) => {
     console.log(value);
 
     setFiltered({ ...filtered, ...value });
-
-    console.log(filtered);
   };
   return (
     <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
-      {/* Filters */}
-
-      <div className="flex gap-4">
-        {/* Status select */}
+      <div className="flex gap-4 items-end">
+        {/* search */}
         <div>
           <p className="text-[#434655]  text-[10px] font-bold leading-3.75 uppercase mb-1">
-            Status
+            Qidirish
           </p>
-          <div className="relative inline-block">
-            <select
-              onChange={(e) => handleChange({ status: e.target.value })}
-              className="appearance-none pr-10 pl-3 py-2  rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value={'all'}>Barchasi</option>
-              <option value={'normal'}>Normal</option>
-              <option value={'warning'}>Warning</option>
-              <option value={'critical'}>Critical</option>
-            </select>
+          <input
+            placeholder="Qidirish..."
+            value={filtered.search}
+            type="search"
+            onChange={(e) => setFiltered({ ...filtered, search: e.target.value })}
+            className=" pr-2 pl-3 py-2  rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+        {/* Filters */}
+        <div className="flex gap-4">
+          {/* Status select */}
+          <div>
+            <p className="text-[#434655]  text-[10px] font-bold leading-3.75 uppercase mb-1">
+              Status
+            </p>
+            <div className="relative inline-block">
+              <select
+                onChange={(e) => handleChange({ status: e.target.value })}
+                className="appearance-none pr-10 pl-3 py-2  rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value={'all'}>Barchasi</option>
+                <option value={'normal'}>Normal</option>
+                <option value={'warning'}>Warning</option>
+                <option value={'critical'}>Critical</option>
+                <option value={'offline'}>Offline</option>
+              </select>
 
-            <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
-              <DropDownIcon />
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                <DropDownIcon />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Type select */}
-        <div>
-          <p className="text-[#434655]  text-[10px] font-bold leading-3.75 uppercase mb-1">Turi</p>
-          <div className="relative inline-block">
-            <select
-              className="appearance-none pr-10 pl-3 py-2   rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              onChange={(e) => handleChange({ type: e.target.value })}
-            >
-              <option value={'all'}>Barchasi</option>
-              <option>Stansiya</option>
-              <option>Quduq</option>
-              <option>Nasos</option>
-              <option>Klapan</option>
-            </select>
+          {/* Type select */}
+          <div>
+            <p className="text-[#434655]  text-[10px] font-bold leading-3.75 uppercase mb-1">
+              Turi
+            </p>
+            <div className="relative inline-block">
+              <select
+                className="appearance-none pr-10 pl-3 py-2   rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                onChange={(e) => handleChange({ type: e.target.value })}
+              >
+                <option value={'all'}>Barchasi</option>
+                <option>Stansiya</option>
+                <option>Quduq</option>
+                <option>Nasos</option>
+                <option>Klapan</option>
+              </select>
 
-            {/* Custom icon */}
-            <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
-              <DropDownIcon />
+              {/* Custom icon */}
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                <DropDownIcon />
+              </div>
             </div>
           </div>
         </div>

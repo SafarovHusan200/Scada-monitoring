@@ -1,88 +1,6 @@
 'use client';
 import { FaArrowRight } from 'react-icons/fa';
-
-const data = [
-  {
-    name: 'Stansiya A-01',
-    type: 'Stansiya',
-    status: 'warning',
-    location: { region: 'Toshkent viloyati' },
-    operator: 'Karimov Jasur',
-    installedAt: '2019-03-15',
-    lastMaintenance: '2025-01-10',
-    parameters: { pressure: 8.55, flow: 176.76, temperature: 90.4 },
-  },
-  {
-    name: 'Stansiya A-07',
-    type: 'Nasos',
-    status: 'normal',
-    location: { region: 'Toshkent viloyati' },
-    operator: 'Rahimov Bobur',
-    installedAt: '2020-06-20',
-    lastMaintenance: '2024-11-05',
-    parameters: { pressure: 5.2, flow: 144.23, temperature: 61.84 },
-  },
-  {
-    name: 'Quduq B-03',
-    type: 'Quduq',
-    status: 'normal',
-    location: { region: 'Samarqand viloyati' },
-    operator: 'Toshmatov Dilshod',
-    installedAt: '2018-09-10',
-    lastMaintenance: '2024-08-22',
-    parameters: { pressure: 2.63, flow: 103.08, temperature: 68.94 },
-  },
-  {
-    name: 'Nasos N-12',
-    type: 'Nasos',
-    status: 'normal',
-    location: { region: "Farg'ona viloyati" },
-    operator: 'Yusupov Anvar',
-    installedAt: '2021-01-05',
-    lastMaintenance: '2025-02-14',
-    parameters: { pressure: 3.99, flow: 146.75, temperature: 66.79 },
-  },
-  {
-    name: 'Klapan K-05',
-    type: 'Klapan',
-    status: 'offline',
-    location: { region: 'Buxoro viloyati' },
-    operator: 'Mirzayev Sherzod',
-    installedAt: '2017-12-01',
-    lastMaintenance: '2024-06-30',
-    parameters: { pressure: 1, flow: 20, temperature: 30 },
-  },
-  {
-    name: 'Quduq B-08',
-    type: 'Quduq',
-    status: 'normal',
-    location: { region: 'Namangan viloyati' },
-    operator: 'Hasanov Timur',
-    installedAt: '2022-04-18',
-    lastMaintenance: '2025-03-01',
-    parameters: { pressure: 3.19, flow: 138.2, temperature: 68.35 },
-  },
-  {
-    name: 'Stansiya C-02',
-    type: 'Stansiya',
-    status: 'normal',
-    location: { region: 'Andijon viloyati' },
-    operator: 'Nazarov Sardor',
-    installedAt: '2020-11-30',
-    lastMaintenance: '2024-12-15',
-    parameters: { pressure: 2.47, flow: 92.12, temperature: 70.1 },
-  },
-  {
-    name: 'Klapan K-11',
-    type: 'Klapan',
-    status: 'critical',
-    location: { region: 'Qashqadaryo viloyati' },
-    operator: 'Ergashev Mansur',
-    installedAt: '2023-02-10',
-    lastMaintenance: '2025-01-25',
-    parameters: { pressure: 9.49, flow: 191.69, temperature: 113.5 },
-  },
-];
+import CardSkeleton from './CardSkeleton';
 
 const statusStyle = {
   normal: ' border-[rgba(0,98,41,0.20)] bg-[rgba(0,126,55,0.10)]',
@@ -112,11 +30,21 @@ const btnStyle = {
   offline: 'text-gray-700 ',
 };
 
-export default function CardsComponent() {
+export default function CardsComponent({ data, isLoading }) {
+  const messageData = (item) => (item.message ? item.message.split(' ').slice(2).join(' ') : '');
+  if (isLoading) {
+    return (
+      <div className="w-full flex gap-8 flex-wrap">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <CardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
   return (
     <div className="w-full ">
       <div className="w-full flex items-start justify-between gap-8 flex-wrap">
-        {data.map((item, index) => (
+        {data?.map((item, index) => (
           <div
             key={index}
             className="w-75 pt-6 overflow-hidden hover:shadow-md transition rounded-2xl border border-[rgba(195,198,215,0.10)] bg-white shadow-sm "
@@ -177,7 +105,7 @@ export default function CardsComponent() {
             <div
               className={`mt-3 py-3 px-6 font-medium text-sm text-black flex justify-between items-center border-t border-[rgba(195,198,215,0.10)]  ${statusStyle[item.status]} rounded-none`}
             >
-              <span>{item.message || 'bosim kritik darajaga yetdi'}</span>
+              <span>{messageData(item) || 'Normal xolatda'}</span>
 
               <button
                 className={` text-center text-[12px]  font-bold leading-4 tracking-[1.2px] uppercase px-3 py-1 rounded-md ${btnStyle[item.status]}`}

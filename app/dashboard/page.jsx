@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import StatsComponent from '@/components/StatsComponent';
 
 import Filters from '@/components/Filters';
@@ -18,35 +18,50 @@ const DashboardPage = () => {
     content: 'card',
   });
 
-  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(filtered.search);
 
+  // Debounce effect
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(filtered.search);
+    }, 1000); // 1 sekund
+
+    return () => clearTimeout(handler);
+  }, [filtered.search]);
+
+  // React Query
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['stations', search],
-    queryFn: () => (search ? stationService.search(search) : stationService.getAll()),
-  });
+    queryKey: ['stations', debouncedSearch, filtered.type, filtered.status],
+    queryFn: () => {
+      // Agar search bo'lsa, search endpoint
+      if (debouncedSearch) {
+        return stationService.search(debouncedSearch);
+      }
 
-  console.log(data);
+      // Type yoki status filter bo'lsa, params bilan getAll
+      const params = new URLSearchParams();
+      if (filtered.type) params.append('type', filtered.type);
+      if (filtered.status) params.append('status', filtered.status);
+
+      return stationService.getAll(params.toString());
+    },
+    keepPreviousData: true,
+  });
 
   return (
     <div className="w-full flex flex-col gap-8">
       {/* Stats */}
 
-      {/* search */}
-      <input
-        placeholder="Qidirish..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border rounded-lg px-3 py-2 mb-4"
-      />
-
-      {/* {isLoading && <p>Loading...</p>}
-
-      {isError && <p>Xatolik yuz berdi</p>} */}
+      {isError && <p>Xatolik yuz berdi</p>}
 
       <StatsComponent />
       <Filters filtered={filtered} setFiltered={setFiltered} />
 
-      {filtered.content === 'card' ? <CardsComponent /> : <TableComponent />}
+      {filtered.content === 'card' ? (
+        <CardsComponent data={data} isLoading={isLoading} />
+      ) : (
+        <TableComponent />
+      )}
 
       <Footer />
     </div>
