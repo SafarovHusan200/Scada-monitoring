@@ -1,0 +1,17 @@
+
+
+.card__item {
+  width: calc(20% - 28px) !important;
+}
+
+@media screen and (max-width: 1800px) {
+  .card__item {
+    width: calc(25% - 28px) !important;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .card__item {
+    width: calc(33% - 28px) !important;
+  }
+}

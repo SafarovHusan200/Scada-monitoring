@@ -47,7 +47,7 @@ const DashboardLayout = ({ children }) => {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC]">
+    <div className="w-full flex min-h-screen bg-[#F8FAFC]">
       {/* sidebar */}
       <aside className="w-63.75  p-2 border-r border-[#E2E8F0] bg-[#F8FAFC]">
         <div className="mt-4 mb-10 px-6">
@@ -81,14 +81,14 @@ const DashboardLayout = ({ children }) => {
       </aside>
 
       {/* main */}
-      <div className="flex flex-col flex-1 h-screen ">
+      <div className="flex flex-col flex-1 h-screen w-[calc(100%-255px)] ">
         {/* header */}
         <header className="flex items-center justify-between px-6 py-4    bg-white/80 shadow-sm backdrop-blur-md">
           <h1 className="text-lg font-semibold">SCADA Monitoring</h1>
 
           <div className="flex items-center gap-3 md:gap-6 ">
             <div className="bg-[#D2E1F7] rounded-3xl px-3 py-2">
-              <p className="text-[#39485A] font-medium text-[12px] ">
+              <p className="text-[#39485A] font-medium text-[14px] ">
                 Oxirgi yangilanish:{' '}
                 <span className="text-blue-600">{dayjs(updateTime).format('HH:mm:ss')}</span>
               </p>
@@ -126,7 +126,7 @@ const DashboardLayout = ({ children }) => {
         </header>
 
         {/* content */}
-        <main className=" overflow-auto p-6">{children}</main>
+        <main className=" overflow-auto  p-6">{children}</main>
       </div>
     </div>
   );

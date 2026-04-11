@@ -12,12 +12,26 @@ import { UpdateContext } from '@/context/updateContext';
 
 const DashboardPage = () => {
   const { setUpdateTime } = useContext(UpdateContext);
+
   const [filtered, setFiltered] = useState({
     type: '',
     status: '',
     search: '',
-    content: 'card',
+    content: 'card', // server va client bir xil boshlaydi
   });
+
+  // Mount bo'lgandan keyin localStorage dan o'qiymiz
+  useEffect(() => {
+    const saved = localStorage.getItem('dashboard-content');
+    if (saved) {
+      setFiltered((prev) => ({ ...prev, content: saved }));
+    }
+  }, []);
+
+  // content o'zgarganda saqlash
+  useEffect(() => {
+    localStorage.setItem('dashboard-content', filtered.content);
+  }, [filtered.content]);
 
   const [debouncedSearch, setDebouncedSearch] = useState(filtered.search);
 
@@ -57,7 +71,7 @@ const DashboardPage = () => {
   return (
     <div className="w-full flex flex-col gap-8">
       {isError ? (
-        <p className="text-red-500">Xatolik yuz berdi: {isError}</p>
+        <p className="text-red-500">Xatolik yuz berdi {isError}</p>
       ) : (
         <>
           <StatsComponent />
@@ -66,7 +80,7 @@ const DashboardPage = () => {
           {filtered.content === 'card' ? (
             <CardsComponent data={data} isLoading={isLoading} />
           ) : (
-            <TableComponent />
+            <TableComponent data={data} isLoading={isLoading} />
           )}
         </>
       )}

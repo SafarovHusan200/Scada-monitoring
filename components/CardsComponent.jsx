@@ -1,6 +1,9 @@
 'use client';
+import { useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import CardSkeleton from './CardSkeleton';
+import StationModal from './StationModal';
+import '../styles/cardStyle.css';
 
 const statusStyle = {
   normal: ' border-[rgba(0,98,41,0.20)] bg-[rgba(0,126,55,0.10)]',
@@ -31,6 +34,7 @@ const btnStyle = {
 };
 
 export default function CardsComponent({ data, isLoading }) {
+  const [selectedItem, setSelectedItem] = useState(null);
   const messageData = (item) => (item.message ? item.message.split(' ').slice(2).join(' ') : '');
   if (isLoading) {
     return (
@@ -48,14 +52,14 @@ export default function CardsComponent({ data, isLoading }) {
 
   return (
     <div className="w-full ">
-      <div className="w-full flex items-start justify-between gap-8 flex-wrap">
+      <div className=" cards w-full flex items-start justify-center gap-4 md:gap-8 flex-wrap">
         {data?.map((item, index) => (
           <div
             key={index}
-            className="w-75 pt-6 overflow-hidden hover:shadow-md transition rounded-2xl border border-[rgba(195,198,215,0.10)] bg-white shadow-sm "
+            className="card__item pt-6 overflow-hidden hover:shadow-md transition rounded-2xl border border-[rgba(195,198,215,0.10)] bg-white shadow-sm "
           >
             {/* header */}
-            <div className="px-6 flex items-center justify-between mb-3">
+            <div className=" px-6 flex items-center justify-between mb-3">
               <h2 className="text-[#191C1E] font-[Inter] text-[20px] font-bold leading-7 ">
                 {item.name}
               </h2>
@@ -110,9 +114,10 @@ export default function CardsComponent({ data, isLoading }) {
             <div
               className={`mt-3 py-3 px-6 font-medium text-sm text-black flex justify-between items-center border-t border-[rgba(195,198,215,0.10)]  ${statusStyle[item.status]} rounded-none`}
             >
-              <span>{messageData(item) || 'Normal xolatda'}</span>
+              <span>{messageData(item) || `Hammasi joyida, Normal xolatda ishlayapti`}</span>
 
               <button
+                onClick={() => setSelectedItem(item)}
                 className={` text-center text-[12px]  font-bold leading-4 tracking-[1.2px] uppercase px-3 py-1 rounded-md ${btnStyle[item.status]}`}
               >
                 <FaArrowRight />
@@ -121,6 +126,10 @@ export default function CardsComponent({ data, isLoading }) {
           </div>
         ))}
       </div>
+
+      {selectedItem && (
+        <StationModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+      )}
     </div>
   );
 }
