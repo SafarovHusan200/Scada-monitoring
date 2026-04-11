@@ -121,7 +121,7 @@ const DashboardLayout = ({ children }) => {
             >
               <FaBars size={16} />
             </button>
-            <h1 className="text-base sm:text-lg font-semibold">SCADA Monitoring</h1>
+            <h1 className="text-base sm:text-lg font-semibold text-black">SCADA Monitoring</h1>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">

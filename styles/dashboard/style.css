@@ -9,6 +9,7 @@
 
 a {
   transition: 0.25s;
+  color: #434655;
 }
 a:hover span {
   color: #2563eb;
