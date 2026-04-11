@@ -20,6 +20,8 @@ const StatsComponent = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['stats'],
     queryFn: statsService.getStats,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
   });
 
   if (isLoading) {

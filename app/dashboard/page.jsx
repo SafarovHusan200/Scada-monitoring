@@ -1,7 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import StatsComponent from '@/components/StatsComponent';
-
 import Filters from '@/components/Filters';
 import CardsComponent from '@/components/CardsComponent';
 import TableComponent from '@/components/TableComponent';
@@ -9,8 +8,10 @@ import Footer from '@/components/Footer';
 
 import { useQuery } from '@tanstack/react-query';
 import { stationService } from '@/services/stationService';
+import { UpdateContext } from '@/context/updateContext';
 
 const DashboardPage = () => {
+  const { setUpdateTime } = useContext(UpdateContext);
   const [filtered, setFiltered] = useState({
     type: '',
     status: '',
@@ -24,21 +25,18 @@ const DashboardPage = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(filtered.search);
-    }, 1000); // 1 sekund
+    }, 1000);
 
     return () => clearTimeout(handler);
   }, [filtered.search]);
 
-  // React Query
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, dataUpdatedAt } = useQuery({
     queryKey: ['stations', debouncedSearch, filtered.type, filtered.status],
     queryFn: () => {
-      // Agar search bo'lsa, search endpoint
       if (debouncedSearch) {
         return stationService.search(debouncedSearch);
       }
 
-      // Type yoki status filter bo'lsa, params bilan getAll
       const params = new URLSearchParams();
       if (filtered.type) params.append('type', filtered.type);
       if (filtered.status) params.append('status', filtered.status);
@@ -46,21 +44,31 @@ const DashboardPage = () => {
       return stationService.getAll(params.toString());
     },
     keepPreviousData: true,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
   });
+
+  useEffect(() => {
+    if (dataUpdatedAt) {
+      setUpdateTime(new Date(dataUpdatedAt));
+    }
+  }, [dataUpdatedAt]);
 
   return (
     <div className="w-full flex flex-col gap-8">
-      {/* Stats */}
-
-      {isError && <p>Xatolik yuz berdi</p>}
-
-      <StatsComponent />
-      <Filters filtered={filtered} setFiltered={setFiltered} />
-
-      {filtered.content === 'card' ? (
-        <CardsComponent data={data} isLoading={isLoading} />
+      {isError ? (
+        <p className="text-red-500">Xatolik yuz berdi: {isError}</p>
       ) : (
-        <TableComponent />
+        <>
+          <StatsComponent />
+          <Filters filtered={filtered} setFiltered={setFiltered} />
+
+          {filtered.content === 'card' ? (
+            <CardsComponent data={data} isLoading={isLoading} />
+          ) : (
+            <TableComponent />
+          )}
+        </>
       )}
 
       <Footer />

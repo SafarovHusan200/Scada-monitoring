@@ -41,6 +41,11 @@ export default function CardsComponent({ data, isLoading }) {
       </div>
     );
   }
+
+  if (data.length == 0) {
+    return <h2>Ma'lumot topilmadi</h2>;
+  }
+
   return (
     <div className="w-full ">
       <div className="w-full flex items-start justify-between gap-8 flex-wrap">
