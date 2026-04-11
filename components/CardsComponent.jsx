@@ -74,7 +74,7 @@ export default function CardsComponent({ data, isLoading }) {
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100">
                     <img 
-                      src={`https://api.dicebear.com/7.x/identicon/svg?seed=${item.name}`} 
+                      src={`https://www.gazeta.uz/media/img/2026/03/9b8kibb204us1jVfjrD17724330990258_l.webp`} 
                       alt={item.name}
                       className="w-12 h-12 object-cover opacity-80"
                     />
