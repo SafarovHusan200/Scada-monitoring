@@ -75,7 +75,7 @@ const StatsComponent = () => {
             {data?.data?.stations?.warning}
           </h3>
         </div>
-        <div className="absolute top-4 sm:top-6 right-4 sm:right-6 w-11.5 h-11.5 flex justify-center p-3 rounded-lg bg-[#F97316]/10">
+        <div className="absolute top-8  sm:top-6 right-4 sm:right-6 w-11.5 h-11.5 flex justify-center p-3 rounded-lg bg-[#F97316]/10">
           <img src="/icons/warning.svg" />
         </div>
       </div>
