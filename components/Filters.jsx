@@ -21,11 +21,11 @@ const Filters = ({ setFiltered, filtered }) => {
     setFiltered({ ...filtered, ...value });
   };
   return (
-    <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
-      <div className="flex gap-4 items-end">
+    <div className="flex flex-wrap flex-col sm:flex-row sm:items-center justify-between bg-gray-100 p-3 sm:p-4 rounded-lg gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-end">
         {/* search */}
         <div>
-          <p className="text-[#434655]  text-[10px] font-bold leading-3.75 uppercase mb-1">
+          <p className="text-[#434655] text-[10px] font-bold leading-3.75 uppercase mb-1">
             Qidirish
           </p>
           <input
@@ -33,20 +33,20 @@ const Filters = ({ setFiltered, filtered }) => {
             value={filtered.search}
             type="search"
             onChange={(e) => setFiltered({ ...filtered, search: e.target.value })}
-            className=" pr-2 pl-3 py-2  rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full sm:w-auto pr-2 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
         {/* Filters */}
-        <div className="flex gap-4">
+        <div className="flex gap-3 sm:gap-4">
           {/* Status select */}
-          <div>
-            <p className="text-[#434655]  text-[10px] font-bold leading-3.75 uppercase mb-1">
+          <div className="flex-1 sm:flex-none">
+            <p className="text-[#434655] text-[10px] font-bold leading-3.75 uppercase mb-1">
               Status
             </p>
-            <div className="relative inline-block">
+            <div className="relative">
               <select
                 onChange={(e) => handleChange({ status: e.target.value })}
-                className="appearance-none pr-10 pl-3 py-2  rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full appearance-none pr-10 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value={'all'}>Barchasi</option>
                 <option value={'normal'}>Normal</option>
@@ -54,7 +54,6 @@ const Filters = ({ setFiltered, filtered }) => {
                 <option value={'critical'}>Critical</option>
                 <option value={'offline'}>Offline</option>
               </select>
-
               <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
                 <DropDownIcon />
               </div>
@@ -62,13 +61,13 @@ const Filters = ({ setFiltered, filtered }) => {
           </div>
 
           {/* Type select */}
-          <div>
-            <p className="text-[#434655]  text-[10px] font-bold leading-3.75 uppercase mb-1">
+          <div className="flex-1 sm:flex-none">
+            <p className="text-[#434655] text-[10px] font-bold leading-3.75 uppercase mb-1">
               Turi
             </p>
-            <div className="relative inline-block">
+            <div className="relative">
               <select
-                className="appearance-none pr-10 pl-3 py-2   rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full appearance-none pr-10 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                 onChange={(e) => handleChange({ type: e.target.value })}
               >
                 <option value={'all'}>Barchasi</option>
@@ -77,8 +76,6 @@ const Filters = ({ setFiltered, filtered }) => {
                 <option>Nasos</option>
                 <option>Klapan</option>
               </select>
-
-              {/* Custom icon */}
               <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
                 <DropDownIcon />
               </div>
@@ -88,23 +85,23 @@ const Filters = ({ setFiltered, filtered }) => {
       </div>
 
       {/* View toggle */}
-      <div className="flex gap-2">
+      <div className="flex  gap-2 self-end sm:self-auto">
         <button
-          className={`text-[#434655] text-center text-[14px] font-medium flex items-center gap-1 px-3 py-2  bg-white rounded hover:bg-gray-50  border-gray-300 
-            ${filtered.content === 'card' ? 'text-blue-600 text-[14px] ' : ''}`}
+          className={`text-[#434655] text-center text-[14px] font-medium flex items-center gap-1 px-3 py-2 bg-white rounded hover:bg-gray-50 border-gray-300 
+            ${filtered.content === 'card' ? 'text-blue-600' : ''}`}
           onClick={() => setFiltered({ ...filtered, content: 'card' })}
         >
           <BsGrid />
-          Kartalar
+          <span className="hidden sm:inline">Kartalar</span>
         </button>
 
         <button
-          className={`text-[#434655] text-center text-[14px] font-medium flex items-center gap-1 px-3 py-2  bg-white rounded hover:bg-gray-50  border-gray-300 
-            ${filtered.content === 'table' ? 'text-blue-600 text-[14px] ' : ''}`}
+          className={`text-[#434655] text-center text-[14px] font-medium flex items-center gap-1 px-3 py-2 bg-white rounded hover:bg-gray-50 border-gray-300 
+            ${filtered.content === 'table' ? 'text-blue-600' : ''}`}
           onClick={() => setFiltered({ ...filtered, content: 'table' })}
         >
           <MdOutlineTableRows />
-          Jadval
+          <span className="hidden sm:inline">Jadval</span>
         </button>
       </div>
     </div>

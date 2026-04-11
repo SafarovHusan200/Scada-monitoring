@@ -1,6 +1,6 @@
 const CardSkeleton = () => {
   return (
-    <div className="w-75 pt-6 rounded-2xl border border-[rgba(195,198,215,0.10)] bg-white shadow-sm animate-pulse">
+    <div className="w-full pt-6 rounded-2xl border border-[rgba(195,198,215,0.10)] bg-white shadow-sm animate-pulse">
       {/* header */}
       <div className="px-6 flex items-center justify-between mb-3">
         <div className="h-6 w-40 bg-gray-200 rounded"></div>

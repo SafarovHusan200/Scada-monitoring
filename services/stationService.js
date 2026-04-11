@@ -17,4 +17,9 @@ export const stationService = {
 
     return res.data.data;
   },
+
+  getById: async (id) => {
+    const res = await axios.get(`${API}/stations/${id}`);
+    return res.data.data;
+  },
 };

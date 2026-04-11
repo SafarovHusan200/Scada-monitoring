@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { MdDashboard } from 'react-icons/md';
 import { IoSettingsOutline } from 'react-icons/io5';
-import { FaRegMap, FaChartBar } from 'react-icons/fa';
+import { FaRegMap, FaChartBar, FaTimes, FaBars } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 
 import '../../styles/dashboard/style.css';
@@ -12,121 +12,148 @@ import { UpdateContext } from '@/context/updateContext';
 import dayjs from 'dayjs';
 
 const menuItems = [
-  {
-    label: 'Asosiy',
-    href: '/dashboard',
-    icon: MdDashboard,
-    key: '',
-  },
-  {
-    label: 'Xarita',
-    href: '/dashboard/map',
-    icon: FaRegMap,
-    key: 'map',
-  },
-  {
-    label: 'Hisobotlar',
-    href: '/dashboard/reports',
-    icon: FaChartBar,
-    key: 'reports',
-  },
-  {
-    label: 'Sozlamalar',
-    href: '/dashboard/settings',
-    icon: IoSettingsOutline,
-    key: 'settings',
-  },
+  { label: 'Asosiy', href: '/dashboard', icon: MdDashboard, key: '' },
+  { label: 'Xarita', href: '/dashboard/map', icon: FaRegMap, key: 'map' },
+  { label: 'Hisobotlar', href: '/dashboard/reports', icon: FaChartBar, key: 'reports' },
+  { label: 'Sozlamalar', href: '/dashboard/settings', icon: IoSettingsOutline, key: 'settings' },
 ];
 
 const DashboardLayout = ({ children }) => {
   const { updateTime } = useContext(UpdateContext);
   const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const route = useMemo(() => {
-    return pathname.split('/')[2] || '';
+  const route = useMemo(() => pathname.split('/')[2] || '', [pathname]);
+
+  // Close sidebar on route change
+  useEffect(() => {
+    setSidebarOpen(false);
   }, [pathname]);
 
-  return (
-    <div className="w-full flex min-h-screen bg-[#F8FAFC]">
-      {/* sidebar */}
-      <aside className="w-63.75  p-2 border-r border-[#E2E8F0] bg-[#F8FAFC]">
-        <div className="mt-4 mb-10 px-6">
-          <h3 className="text-[#0F172A] font-bold text-xl tracking-tight">SCADA Monitor</h3>
+  // Lock body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [sidebarOpen]);
 
+  const SidebarContent = () => (
+    <>
+      {/* Logo */}
+      <div className="mt-4 mb-10 px-6 flex items-center justify-between">
+        <div>
+          <h3 className="text-[#0F172A] font-bold text-xl tracking-tight">SCADA Monitor</h3>
           <p className="text-[#434655] text-sm">Toshkent shahar</p>
         </div>
+        {/* Close button — only on mobile */}
+        <button
+          className="lg:hidden w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-500"
+          onClick={() => setSidebarOpen(false)}
+        >
+          <FaTimes size={14} />
+        </button>
+      </div>
 
-        <nav className="space-y-1">
-          {menuItems.map(({ label, href, icon: Icon, key }) => {
-            const active = route === key;
+      <nav className="space-y-1">
+        {menuItems.map(({ label, href, icon: Icon, key }) => {
+          const active = route === key;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`
+                flex items-center gap-3 px-4 py-3 rounded
+                transition duration-300
+                hover:bg-white hover:shadow-sm
+                ${active ? 'active' : ''}
+              `}
+            >
+              <Icon className="text-[#475569] text-xl" />
+              <span className="text-sm font-medium">{label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </>
+  );
 
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded
-                  transition duration-300
-                  hover:bg-white hover:shadow-sm
-                  ${active ? 'active' : ''}
-                `}
-              >
-                <Icon className="text-[#475569] text-xl" />
-
-                <span className="text-sm font-medium">{label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+  return (
+    <div className="w-full flex h-screen bg-[#F8FAFC]">
+      {/* ── DESKTOP SIDEBAR ── */}
+      <aside className="hidden lg:block w-[255px] flex-shrink-0 p-2 border-r border-[#E2E8F0] bg-[#F8FAFC]">
+        <SidebarContent />
       </aside>
 
-      {/* main */}
-      <div className="flex flex-col flex-1 h-screen w-[calc(100%-255px)] ">
-        {/* header */}
-        <header className="flex items-center justify-between px-6 py-4    bg-white/80 shadow-sm backdrop-blur-md">
-          <h1 className="text-lg font-semibold">SCADA Monitoring</h1>
+      {/* ── MOBILE SIDEBAR OVERLAY ── */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
-          <div className="flex items-center gap-3 md:gap-6 ">
-            <div className="bg-[#D2E1F7] rounded-3xl px-3 py-2">
-              <p className="text-[#39485A] font-medium text-[14px] ">
-                Oxirgi yangilanish:{' '}
+      {/* ── MOBILE SIDEBAR DRAWER ── */}
+      <aside
+        className={`
+          fixed top-0 left-0 z-50 h-full w-[255px] p-2
+          bg-[#F8FAFC] border-r border-[#E2E8F0]
+          transform transition-transform duration-300 ease-in-out
+          lg:hidden
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        <SidebarContent />
+      </aside>
+
+      {/* ── MAIN CONTENT ── */}
+      <div className="flex flex-col flex-1 min-h-screen w-0 lg:w-[calc(100%-255px)]">
+        {/* Header */}
+        <header className="flex items-center justify-between px-4 sm:px-6 py-4 bg-white/80 shadow-sm backdrop-blur-md sticky top-0 z-30">
+          <div className="flex items-center gap-3">
+            {/* Hamburger — only on mobile */}
+            <button
+              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-600"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Menyu ochish"
+            >
+              <FaBars size={16} />
+            </button>
+            <h1 className="text-base sm:text-lg font-semibold">SCADA Monitoring</h1>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="hidden sm:block bg-[#D2E1F7] rounded-3xl px-3 py-2">
+              <p className="text-[#39485A] font-medium text-[13px]">
+                Yangilanish:{' '}
                 <span className="text-blue-600">{dayjs(updateTime).format('HH:mm:ss')}</span>
               </p>
             </div>
-            <button className="notification  btn__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="20"
-                viewBox="0 0 16 20"
-                fill="currentColor"
-              >
-                <path
-                  d="M0 17V15H2V8C2 6.61667 2.41667 5.3875 3.25 4.3125C4.08333 3.2375 5.16667 2.53333 6.5 2.2V1.5C6.5 1.08333 6.64583 0.729167 6.9375 0.4375C7.22917 0.145833 7.58333 0 8 0C8.41667 0 8.77083 0.145833 9.0625 0.4375C9.35417 0.729167 9.5 1.08333 9.5 1.5V2.2C10.8333 2.53333 11.9167 3.2375 12.75 4.3125C13.5833 5.3875 14 6.61667 14 8V15H16V17H0ZM8 20C7.45 20 6.97917 19.8042 6.5875 19.4125C6.19583 19.0208 6 18.55 6 18H10C10 18.55 9.80417 19.0208 9.4125 19.4125C9.02083 19.8042 8.55 20 8 20ZM4 15H12V8C12 6.9 11.6083 5.95833 10.825 5.175C10.0417 4.39167 9.1 4 8 4C6.9 4 5.95833 4.39167 5.175 5.175C4.39167 5.95833 4 6.9 4 8V15Z"
-                  fill="#434655"
-                />
+            {/* Mobile — only time */}
+            <div className="sm:hidden bg-[#D2E1F7] rounded-2xl px-2 py-1">
+              <p className="text-[#39485A] font-medium text-[12px]">
+                <span className="text-blue-600">{dayjs(updateTime).format('HH:mm:ss')}</span>
+              </p>
+            </div>
+
+            <button className="notification btn__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20" fill="currentColor">
+                <path d="M0 17V15H2V8C2 6.61667 2.41667 5.3875 3.25 4.3125C4.08333 3.2375 5.16667 2.53333 6.5 2.2V1.5C6.5 1.08333 6.64583 0.729167 6.9375 0.4375C7.22917 0.145833 7.58333 0 8 0C8.41667 0 8.77083 0.145833 9.0625 0.4375C9.35417 0.729167 9.5 1.08333 9.5 1.5V2.2C10.8333 2.53333 11.9167 3.2375 12.75 4.3125C13.5833 5.3875 14 6.61667 14 8V15H16V17H0ZM8 20C7.45 20 6.97917 19.8042 6.5875 19.4125C6.19583 19.0208 6 18.55 6 18H10C10 18.55 9.80417 19.0208 9.4125 19.4125C9.02083 19.8042 8.55 20 8 20ZM4 15H12V8C12 6.9 11.6083 5.95833 10.825 5.175C10.0417 4.39167 9.1 4 8 4C6.9 4 5.95833 4.39167 5.175 5.175C4.39167 5.95833 4 6.9 4 8V15Z" fill="#434655" />
               </svg>
             </button>
 
             <button className="profile btn__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  d="M3.85 15.1C4.7 14.45 5.65 13.9375 6.7 13.5625C7.75 13.1875 8.85 13 10 13C11.15 13 12.25 13.1875 13.3 13.5625C14.35 13.9375 15.3 14.45 16.15 15.1C16.7333 14.4167 17.1875 13.6417 17.5125 12.775C17.8375 11.9083 18 10.9833 18 10C18 7.78333 17.2208 5.89583 15.6625 4.3375C14.1042 2.77917 12.2167 2 10 2C7.78333 2 5.89583 2.77917 4.3375 4.3375C2.77917 5.89583 2 7.78333 2 10C2 10.9833 2.1625 11.9083 2.4875 12.775C2.8125 13.6417 3.26667 14.4167 3.85 15.1ZM10 11C9.01667 11 8.1875 10.6625 7.5125 9.9875C6.8375 9.3125 6.5 8.48333 6.5 7.5C6.5 6.51667 6.8375 5.6875 7.5125 5.0125C8.1875 4.3375 9.01667 4 10 4C10.9833 4 11.8125 4.3375 12.4875 5.0125C13.1625 5.6875 13.5 6.51667 13.5 7.5C13.5 8.48333 13.1625 9.3125 12.4875 9.9875C11.8125 10.6625 10.9833 11 10 11ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM10 18C10.8833 18 11.7167 17.8708 12.5 17.6125C13.2833 17.3542 14 16.9833 14.65 16.5C14 16.0167 13.2833 15.6458 12.5 15.3875C11.7167 15.1292 10.8833 15 10 15C9.11667 15 8.28333 15.1292 7.5 15.3875C6.71667 15.6458 6 16.0167 5.35 16.5C6 16.9833 6.71667 17.3542 7.5 17.6125C8.28333 17.8708 9.11667 18 10 18ZM10 9C10.4333 9 10.7917 8.85833 11.075 8.575C11.3583 8.29167 11.5 7.93333 11.5 7.5C11.5 7.06667 11.3583 6.70833 11.075 6.425C10.7917 6.14167 10.4333 6 10 6C9.56667 6 9.20833 6.14167 8.925 6.425C8.64167 6.70833 8.5 7.06667 8.5 7.5C8.5 7.93333 8.64167 8.29167 8.925 8.575C9.20833 8.85833 9.56667 9 10 9Z"
-                  fill="#434655"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M3.85 15.1C4.7 14.45 5.65 13.9375 6.7 13.5625C7.75 13.1875 8.85 13 10 13C11.15 13 12.25 13.1875 13.3 13.5625C14.35 13.9375 15.3 14.45 16.15 15.1C16.7333 14.4167 17.1875 13.6417 17.5125 12.775C17.8375 11.9083 18 10.9833 18 10C18 7.78333 17.2208 5.89583 15.6625 4.3375C14.1042 2.77917 12.2167 2 10 2C7.78333 2 5.89583 2.77917 4.3375 4.3375C2.77917 5.89583 2 7.78333 2 10C2 10.9833 2.1625 11.9083 2.4875 12.775C2.8125 13.6417 3.26667 14.4167 3.85 15.1ZM10 11C9.01667 11 8.1875 10.6625 7.5125 9.9875C6.8375 9.3125 6.5 8.48333 6.5 7.5C6.5 6.51667 6.8375 5.6875 7.5125 5.0125C8.1875 4.3375 9.01667 4 10 4C10.9833 4 11.8125 4.3375 12.4875 5.0125C13.1625 5.6875 13.5 6.51667 13.5 7.5C13.5 8.48333 13.1625 9.3125 12.4875 9.9875C11.8125 10.6625 10.9833 11 10 11ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM10 18C10.8833 18 11.7167 17.8708 12.5 17.6125C13.2833 17.3542 14 16.9833 14.65 16.5C14 16.0167 13.2833 15.6458 12.5 15.3875C11.7167 15.1292 10.8833 15 10 15C9.11667 15 8.28333 15.1292 7.5 15.3875C6.71667 15.6458 6 16.0167 5.35 16.5C6 16.9833 6.71667 17.3542 7.5 17.6125C8.28333 17.8708 9.11667 18 10 18ZM10 9C10.4333 9 10.7917 8.85833 11.075 8.575C11.3583 8.29167 11.5 7.93333 11.5 7.5C11.5 7.06667 11.3583 6.70833 11.075 6.425C10.7917 6.14167 10.4333 6 10 6C9.56667 6 9.20833 6.14167 8.925 6.425C8.64167 6.70833 8.5 7.06667 8.5 7.5C8.5 7.93333 8.64167 8.29167 8.925 8.575C9.20833 8.85833 9.56667 9 10 9Z" fill="#434655" />
               </svg>
             </button>
           </div>
         </header>
 
-        {/* content */}
-        <main className=" overflow-auto  p-6">{children}</main>
+        {/* Content */}
+        <main className="flex-1 overflow-auto p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

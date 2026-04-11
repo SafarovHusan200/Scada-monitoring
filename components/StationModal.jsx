@@ -1,4 +1,6 @@
 'use client';
+import { stationService } from '@/services/stationService';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import {
   FaTimes,
@@ -181,7 +183,8 @@ const historyTitleColor = {
   default: '#191C1E',
 };
 
-export default function StationModal({ item, onClose }) {
+export default function StationModal({ id, onClose }) {
+  
   const overlayRef = useRef(null);
 
   // Close on ESC
@@ -194,6 +197,20 @@ export default function StationModal({ item, onClose }) {
       document.body.style.overflow = '';
     };
   }, [onClose]);
+
+    const { data: item, isLoading, isError, dataUpdatedAt } = useQuery({
+      queryKey: ['stations'],
+      queryFn: () => {
+       
+          return stationService.getById(id);
+        
+  
+
+      },
+      keepPreviousData: true,
+      refetchInterval: 3000,
+      refetchIntervalInBackground: true,
+    });
 
   if (!item) return null;
 
@@ -233,9 +250,9 @@ export default function StationModal({ item, onClose }) {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden sm:flex items-center gap-1.5 text-[13px] font-medium text-[#006229]">
+            <span className="flex items-center gap-1.5 text-[13px] font-medium text-[#006229]">
               <FaCircle size={7} className="text-[#006229] animate-pulse" />
-              Jonli uzatish
+             <span className='hidden sm:block'> Jonli uzatish</span>
             </span>
             <button
               onClick={onClose}
@@ -340,6 +357,27 @@ export default function StationModal({ item, onClose }) {
                 </p>
               </div>
             </div>
+
+            {item.message && (
+              <div 
+                className="mt-6 p-4 rounded-xl border flex items-start gap-3"
+                style={{ 
+                  backgroundColor: cfg.bg, 
+                  borderColor: cfg.border,
+                  color: cfg.color 
+                }}
+              >
+                <div className="mt-0.5">
+                  <FaCircle size={8} style={{ color: cfg.dot }} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold tracking-widest uppercase mb-1 opacity-70">Tizim xabari</p>
+                  <p className="text-[13px] font-semibold leading-relaxed">
+                    {item.message}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Holat tarixi */}
@@ -356,7 +394,7 @@ export default function StationModal({ item, onClose }) {
                       className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                       style={{ background: historyDotColor[h.type] }}
                     />
-                    {i < history.length - 1 && (
+                    {i < history?.length - 1 && (
                       <div className="w-[1px] h-5 bg-gray-200 mt-1" />
                     )}
                   </div>

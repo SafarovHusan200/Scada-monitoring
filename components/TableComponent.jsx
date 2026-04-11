@@ -72,7 +72,7 @@ export default function TableComponent({ data, isLoading }) {
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!data || data?.length === 0) {
     return (
       <h2 style={{ color: '#6B7280', textAlign: 'center', padding: '2rem 0' }}>
         Ma'lumot topilmadi
