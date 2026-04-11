@@ -45,7 +45,7 @@ const DashboardLayout = ({ children }) => {
       {/* Logo */}
       <div className="mt-4 mb-10 px-6 flex items-center justify-between">
         <div>
-          <h3 className="text-[#0F172A] font-bold text-xl tracking-tight">SCADA Monitor</h3>
+          <h3 className="text-[#0F172A] font-bold text-xl tracking-tight">SCADA Nazorati</h3>
           <p className="text-[#434655] text-sm">Toshkent shahar</p>
         </div>
         {/* Close button — only on mobile */}
