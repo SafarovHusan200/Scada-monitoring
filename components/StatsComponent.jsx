@@ -104,7 +104,7 @@ const StatsComponent = () => {
           </h3>
         </div>
         <div className="w-11.5 h-11.5 flex justify-center p-3 rounded-lg bg-gray-200">
-          <RiWifiOffLine className="text-[20px]" />
+          <RiWifiOffLine className="text-[20px] text-gray-800" />
         </div>
       </div>
     </div>

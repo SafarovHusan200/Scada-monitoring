@@ -1,15 +1,21 @@
 'use client';
 import { useState } from 'react';
-import { FaArrowRight, FaCheckCircle, FaExclamationTriangle, FaTimesCircle, FaChevronRight } from 'react-icons/fa';
+import {
+  FaArrowRight,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaTimesCircle,
+  FaChevronRight,
+} from 'react-icons/fa';
 import CardSkeleton from './CardSkeleton';
 import StationModal from './StationModal';
 import '../styles/cardStyle.css';
 
 const statusStyle = {
-  normal: ' border-[rgba(0,98,41,0.20)] bg-[rgba(0,126,55,0.10)]',
+  normal: ' border-[rgba(0,98,41,0.20)] text-green-800 bg-[rgba(0,126,55,0.10)]',
   warning: 'bg-[#FFEDD5] text-yellow-700 border-[#FED7AA]',
   critical: 'bg-red-50 text-red-700 border-red-200',
-  offline: 'bg-gray-300  border-gray-300',
+  offline: 'bg-gray-300 text-gray-700  border-gray-300',
 };
 
 const roundStyle = {
@@ -27,10 +33,10 @@ const textStyle = {
 };
 
 const btnStyle = {
-  normal: ' text-[#004AC6]',
-  warning: 'text-[#C2410C] ',
+  normal: ' text-[#004AC6] bg-[rgba(0,126,55,0.10)]',
+  warning: 'text-[#C2410C] bg-[#FED7AA]',
   critical: 'text-[#fff] bg-[#BA1A1A]',
-  offline: 'text-gray-700 ',
+  offline: 'text-white bg-gray-400',
 };
 
 const mobileStatusConfig = {
@@ -67,14 +73,14 @@ export default function CardsComponent({ data, isLoading }) {
           return (
             <div key={index} className="w-full">
               {/* --- Mobile Layout (Horizontal) --- */}
-              <div 
+              <div
                 onClick={() => setSelectedItem(item)}
                 className="flex sm:hidden items-center justify-between p-3 bg-white rounded-2xl shadow-sm border border-[rgba(195,198,215,0.15)] active:scale-[0.98] transition-all"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100">
-                    <img 
-                      src={`https://www.gazeta.uz/media/img/2026/03/9b8kibb204us1jVfjrD17724330990258_l.webp`} 
+                    <img
+                      src={`https://www.gazeta.uz/media/img/2026/03/9b8kibb204us1jVfjrD17724330990258_l.webp`}
                       alt={item.name}
                       className="w-12 h-12 object-cover opacity-80"
                     />
@@ -83,14 +89,12 @@ export default function CardsComponent({ data, isLoading }) {
                     <h2 className="text-[17px] font-bold text-[#191C1E] leading-tight mb-1">
                       {item.name}
                     </h2>
-                    <p className="text-[14px] text-gray-500 font-medium">
-                      {item.type}
-                    </p>
+                    <p className="text-[14px] text-gray-500 font-medium">{item.type}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div 
+                  <div
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-wider"
                     style={{ backgroundColor: mStatus.bg, color: mStatus.color }}
                   >
@@ -102,9 +106,7 @@ export default function CardsComponent({ data, isLoading }) {
               </div>
 
               {/* --- Desktop Layout (Vertical Card) --- */}
-              <div
-                className="hidden sm:block card__item pt-6 overflow-hidden hover:shadow-md transition rounded-2xl border border-[rgba(195,198,215,0.10)] bg-white shadow-sm h-full"
-              >
+              <div className="hidden sm:block card__item pt-6 overflow-hidden hover:shadow-md transition rounded-2xl border border-[rgba(195,198,215,0.10)] bg-white shadow-sm h-full">
                 {/* header */}
                 <div className=" px-6 flex items-center justify-between mb-3">
                   <h2 className="text-[#191C1E] font-[Inter] text-[20px] font-bold leading-7 ">
@@ -137,7 +139,9 @@ export default function CardsComponent({ data, isLoading }) {
                     >
                       {item.parameters.pressure}
                     </p>
-                    <p className="text-[#434655] text-center text-[10px] font-normal leading-7">bar</p>
+                    <p className="text-[#434655] text-center text-[10px] font-normal leading-7">
+                      bar
+                    </p>
                   </div>
 
                   <div className="bg-[#F2F4F6] rounded-lg p-3">
@@ -145,7 +149,9 @@ export default function CardsComponent({ data, isLoading }) {
                     <p className="text-[#191C1E] text-center text-[18px] font-black leading-7 ">
                       {Math.round(item.parameters.flow)}
                     </p>
-                    <p className="text-[#434655] text-center text-[10px] font-normal leading-7">m3/s</p>
+                    <p className="text-[#434655] text-center text-[10px] font-normal leading-7">
+                      m3/s
+                    </p>
                   </div>
 
                   <div className="bg-[#F2F4F6] rounded-lg p-2">
@@ -161,11 +167,13 @@ export default function CardsComponent({ data, isLoading }) {
                 <div
                   className={`mt-3 py-4 px-6 font-medium text-sm text-black flex justify-between items-center border-t border-[rgba(195,198,215,0.10)]  ${statusStyle[item.status]} rounded-none`}
                 >
-                  <span className="text-[12px] opacity-80">{messageData(item) || `Hammasi joyida, Normal xolatda ishlayapti`}</span>
+                  <span className="text-[12px] opacity-80">
+                    {messageData(item) || `Hammasi joyida, Normal xolatda ishlayapti`}
+                  </span>
 
                   <button
                     onClick={() => setSelectedItem(item)}
-                    className={` text-center text-[12px]  font-bold leading-4 tracking-[1.2px] uppercase px-3 py-1 rounded-md ${btnStyle[item.status]}`}
+                    className={` text-center text-[12px]  font-bold leading-4 tracking-[1.2px] uppercase px-3 py-1.5 rounded-md ${btnStyle[item.status]}`}
                   >
                     <FaArrowRight />
                   </button>
@@ -176,9 +184,7 @@ export default function CardsComponent({ data, isLoading }) {
         })}
       </div>
 
-      {selectedItem && (
-        <StationModal id={selectedItem.id} onClose={() => setSelectedItem(null)} />
-      )}
+      {selectedItem && <StationModal id={selectedItem.id} onClose={() => setSelectedItem(null)} />}
     </div>
   );
 }

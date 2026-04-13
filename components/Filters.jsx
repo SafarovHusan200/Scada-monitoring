@@ -33,7 +33,7 @@ const Filters = ({ setFiltered, filtered }) => {
             value={filtered.search}
             type="search"
             onChange={(e) => setFiltered({ ...filtered, search: e.target.value })}
-            className="w-full sm:w-auto pr-2 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full sm:w-auto pr-2 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-black placeholder:text-gray-700"
           />
         </div>
         {/* Filters */}
@@ -46,13 +46,23 @@ const Filters = ({ setFiltered, filtered }) => {
             <div className="relative">
               <select
                 onChange={(e) => handleChange({ status: e.target.value })}
-                className="w-full appearance-none pr-10 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full appearance-none pr-10 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
               >
-                <option value={'all'}>Barchasi</option>
-                <option value={'normal'}>Normal</option>
-                <option value={'warning'}>Warning</option>
-                <option value={'critical'}>Critical</option>
-                <option value={'offline'}>Offline</option>
+                <option className="text-black" value={'all'}>
+                  Barchasi
+                </option>
+                <option className="text-black" value={'normal'}>
+                  Normal
+                </option>
+                <option className="text-black" value={'warning'}>
+                  Warning
+                </option>
+                <option className="text-black" value={'critical'}>
+                  Critical
+                </option>
+                <option className="text-black" value={'offline'}>
+                  Offline
+                </option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
                 <DropDownIcon />
@@ -62,19 +72,19 @@ const Filters = ({ setFiltered, filtered }) => {
 
           {/* Type select */}
           <div className="flex-1 sm:flex-none">
-            <p className="text-[#434655] text-[10px] font-bold leading-3.75 uppercase mb-1">
-              Turi
-            </p>
+            <p className="text-[#434655] text-[10px] font-bold leading-3.75 uppercase mb-1">Turi</p>
             <div className="relative">
               <select
-                className="w-full appearance-none pr-10 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full appearance-none pr-10 pl-3 py-2 rounded bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                 onChange={(e) => handleChange({ type: e.target.value })}
               >
-                <option value={'all'}>Barchasi</option>
-                <option>Stansiya</option>
-                <option>Quduq</option>
-                <option>Nasos</option>
-                <option>Klapan</option>
+                <option className="text-black" value={'all'}>
+                  Barchasi
+                </option>
+                <option className="text-black">Stansiya</option>
+                <option className="text-black">Quduq</option>
+                <option className="text-black">Nasos</option>
+                <option className="text-black">Klapan</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
                 <DropDownIcon />

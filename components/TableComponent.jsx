@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { FaArrowRight, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import StationModal from './StationModal';
 
 const statusStyle = {
   normal: {
@@ -26,6 +27,7 @@ const STATUS_ORDER = { normal: 0, warning: 1, critical: 2, offline: 3 };
 const SORTABLE_COLS = ['pressure', 'flow', 'temperature', 'status'];
 
 export default function TableComponent({ data, isLoading }) {
+  const [selectedItem, setSelectedItem] = useState(null);
   const [sort, setSort] = useState({ key: null, dir: null }); // dir: 'asc' | 'desc' | null
 
   const handleSort = (key) => {
@@ -248,6 +250,7 @@ export default function TableComponent({ data, isLoading }) {
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'center' }}>
                   <button
+                    onClick={() => setSelectedItem(item)}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -269,6 +272,8 @@ export default function TableComponent({ data, isLoading }) {
           })}
         </tbody>
       </table>
+
+      {selectedItem && <StationModal id={selectedItem.id} onClose={() => setSelectedItem(null)} />}
     </div>
   );
 }
